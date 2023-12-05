@@ -14,4 +14,9 @@ The code is being published here only for demonstration purposes.
 </li>
 
 ## Images
-
+![image 1](https://github.com/Motrixox/strategia_code/blob/main/images/1.PNG?raw=true)
+![image 2](https://github.com/Motrixox/strategia_code/blob/main/images/2.PNG?raw=true)
+![image 3](https://github.com/Motrixox/strategia_code/blob/main/images/3.PNG?raw=true)
+![image 4](https://github.com/Motrixox/strategia_code/blob/main/images/4.PNG?raw=true)
+![image 5](https://github.com/Motrixox/strategia_code/blob/main/images/5.PNG?raw=true)
+![image 6](https://github.com/Motrixox/strategia_code/blob/main/images/6.PNG?raw=true)
