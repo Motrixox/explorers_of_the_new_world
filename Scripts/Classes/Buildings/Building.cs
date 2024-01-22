@@ -104,19 +104,4 @@ public abstract class Building : MonoBehaviour, IBuildingInfo
     }
 
     public abstract BuildingInfo GetBuildingInfo();
-
-    //public void SetActive(bool a)
-    //{
-    //    active = a;
-    //    buildingInterface.SetActive(a);
-
-    //    if (active)
-    //    {
-    //        buildingGameObject.FindChild("Active", true).GetComponent<MeshRenderer>().enabled = true;
-    //    }
-    //    else
-    //    {
-    //        buildingGameObject.FindChild("Active", true).GetComponent<MeshRenderer>().enabled = false;
-    //    }
-    //}
 }

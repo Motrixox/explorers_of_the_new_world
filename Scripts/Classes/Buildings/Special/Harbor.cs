@@ -40,18 +40,6 @@ public class Harbor : ServiceBuilding
     {
         tradeDiscount = productivity / 90.0f;
     }
-    protected void CalculateTransport()
-    {
-        throw new System.NotImplementedException();
-    }
-    protected void Transport()
-    {
-        throw new System.NotImplementedException();
-    }
-    protected void Upgrade()
-    {
-        throw new System.NotImplementedException();
-    }
     public override BuildingInfo GetBuildingInfo()
     {
         return buildingInfo;

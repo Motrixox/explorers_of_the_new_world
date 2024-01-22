@@ -11,8 +11,6 @@ public abstract class ServiceBuilding : Building, IEmployees, IWorkingBuilding, 
     public int productivity { get; protected set; } = 50;
     public bool isWorking { get; set; } = false;
     protected int upgradeLevel = 1;
-
-    //public Person manager { get; set; }
     public List<Person> employees { get; set; }
 
     protected new void Awake()
@@ -44,10 +42,6 @@ public abstract class ServiceBuilding : Building, IEmployees, IWorkingBuilding, 
     {
         var empCount = employees.Count;
 
-        //var msg = "Manager is needed for the " + GetBuildingInfo().buildingName + " to work";
-        //ManageLog(msg, manager == null);
-
-        //if (empCount == 0 || manager == null)
         if (empCount == 0)
         {
             productivity = 0;
@@ -60,10 +54,7 @@ public abstract class ServiceBuilding : Building, IEmployees, IWorkingBuilding, 
             employee.CalculateProductivity();
             x += employee.productivity;
         }
-        //manager.CalculateProductivity();
-        //x += manager.productivity;
 
-        //productivity = x / (employeeCapacity + 1);
         productivity = x / employeeCapacity;
     }
 
@@ -89,29 +80,7 @@ public abstract class ServiceBuilding : Building, IEmployees, IWorkingBuilding, 
         employees.Remove(p);
         return true;
     }
-    //public bool AddManager(Person p)
-    //{
-    //    if (manager != null)
-    //    {
-    //        alert.Alert("Manager is already set!");
-    //        return false;
-    //    }
 
-    //    manager = p;
-    //    return true;
-    //}
-    //public bool RemoveManager()
-    //{
-    //    if (manager == null)
-    //    {
-    //        alert.Alert("There is no manager already!");
-    //        return false;
-    //    }
-
-    //    manager = null;
-    //    return true;
-    //}
-    //protected abstract void Upgrade();
     public int GetAvgMorale()
     {
         if (employees.Count == 0)
@@ -124,26 +93,5 @@ public abstract class ServiceBuilding : Building, IEmployees, IWorkingBuilding, 
         }
 
         return moraleSum / employees.Count;
-    }
-    public void DEBUGAddEmployees()
-    {
-        //DEBUG
-        employees.Add(new Person(Guid.NewGuid().GetHashCode(), GetBuildingInfo().profession));
-        employees.Add(new Person(Guid.NewGuid().GetHashCode(), GetBuildingInfo().profession));
-        employees.Add(new Person(Guid.NewGuid().GetHashCode(), GetBuildingInfo().profession));
-        employees.Add(new Person(Guid.NewGuid().GetHashCode(), GetBuildingInfo().profession));
-        //manager = new Person(Guid.NewGuid().GetHashCode());
-
-        foreach (var e in employees)
-        {
-            e.job = gameObject;
-            e.island = island;
-            island.people.Add(e);
-        }
-        //manager.job = gameObject;
-        //manager.island = island;
-        //manager.learnedProfessions.Add(GetBuildingInfo().profession);
-        //island.people.Add(manager);
-        //DEBUG
     }
 }

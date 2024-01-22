@@ -84,7 +84,7 @@ public class MerchantShip : MonoBehaviour
 
         for (int i = 0; i < count; i++)
         {
-            people.Add(new Person(gameState.random.Next(), string.Empty));
+            people.Add(PersonFactory.CreatePerson(gameState.random.Next()));
         }
     }
 

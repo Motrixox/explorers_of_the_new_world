@@ -33,8 +33,6 @@ public class Ship
 
     public Products products { get; private set; }
     public GameObject shipGameObject { get; set; }
-
-    //public Person manager { get; private set; }
     public List<Person> employees { get; private set; }
     public List<Person> passengers { get; private set; }
 
@@ -78,7 +76,7 @@ public class Ship
 
         for (int i = 0; i < 8; i++)
         {
-            var e = new Person(Guid.NewGuid().GetHashCode(), "Sailor");
+            var e = PersonFactory.CreatePerson(gameState.random.Next(), "Sailor");
             e.job = shipGameObject;
             e.home = shipGameObject;
             e.island = null;
@@ -88,7 +86,7 @@ public class Ship
 
         for (int i = 0; i < 20; i++)
         {
-            var e = new Person(Guid.NewGuid().GetHashCode(), string.Empty);
+            var e = PersonFactory.CreatePerson(gameState.random.Next());
             e.job = null;
             e.home = shipGameObject;
             e.island = null;
@@ -171,28 +169,6 @@ public class Ship
         employees.Remove(p);
         return true;
     }
-    //public bool AddManager(Person p)
-    //{
-    //    if (manager != null)
-    //    {
-    //        alert.Alert("Manager is already set!");
-    //        return false;
-    //    }
-
-    //    manager = p;
-    //    return true;
-    //}
-    //public bool RemoveManager()
-    //{
-    //    if (manager == null)
-    //    {
-    //        alert.Alert("There is no manager already!");
-    //        return false;
-    //    }
-
-    //    manager = null;
-    //    return true;
-    //}
     public bool AddPassenger(Person p)
     {
         if (passengers.Count >= passengersCapacity)
@@ -302,28 +278,6 @@ public class Ship
             pos.y = 0;
             gameState.gameLog.Log(shipName + " ran out of food.", pos, "Disasters");
         }
-    }
-
-    public void DEBUGAddEmployees()
-    {
-        //DEBUG
-        employees.Add(new Person(Guid.NewGuid().GetHashCode(), "Sailor"));
-        employees.Add(new Person(Guid.NewGuid().GetHashCode(), "Sailor"));
-        employees.Add(new Person(Guid.NewGuid().GetHashCode(), "Sailor"));
-        employees.Add(new Person(Guid.NewGuid().GetHashCode(), "Sailor"));
-        employees.Add(new Person(Guid.NewGuid().GetHashCode(), "Sailor"));
-        employees.Add(new Person(Guid.NewGuid().GetHashCode(), "Sailor"));
-        employees.Add(new Person(Guid.NewGuid().GetHashCode(), "Sailor"));
-        employees.Add(new Person(Guid.NewGuid().GetHashCode(), "Sailor"));
-
-        foreach (var e in employees)
-        {
-            e.job = shipGameObject;
-            e.home = shipGameObject;
-            e.island = null;
-            e.CalculateProductivity();
-        }
-        //DEBUG
     }
 
     public ShipSerialized GetSerialized()

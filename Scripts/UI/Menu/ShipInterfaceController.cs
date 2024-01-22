@@ -56,8 +56,7 @@ public class ShipInterfaceController : MonoBehaviour
 
     private void OnEnable()
     {
-        PersonListItemShip.OnListChanged += IslandChanged;
-        PersonListItemShip.OnManagerAdded += ManagerAdded;
+        PersonListItemShip.OnListChanged += UpdateInfo;
 
         Start();
         FindActiveShip();
@@ -70,8 +69,7 @@ public class ShipInterfaceController : MonoBehaviour
 
     private void OnDisable()
     {
-        PersonListItemShip.OnListChanged -= IslandChanged;
-        PersonListItemShip.OnManagerAdded -= ManagerAdded;
+        PersonListItemShip.OnListChanged -= UpdateInfo;
         ClearLists();
     }
 
@@ -101,20 +99,6 @@ public class ShipInterfaceController : MonoBehaviour
 
     private void UpdateInfo()
     {
-        //if (activeShip.manager == null)
-        //{
-        //    info.FindChild("ManagerCount", true).GetComponent<Text>().color = Color.red;
-        //    info.FindChild("ManagerCount", true).GetComponent<Text>().text = "0/1";
-        //    employees.FindChild("Manager", true).FindChild("Amount", true).GetComponent<Text>().color = Color.red;
-        //    employees.FindChild("Manager", true).FindChild("Amount", true).GetComponent<Text>().text = "0/1";
-        //}
-        //else
-        //{
-        //    info.FindChild("ManagerCount", true).GetComponent<Text>().color = Color.green;
-        //    info.FindChild("ManagerCount", true).GetComponent<Text>().text = "1/1";
-        //    employees.FindChild("Manager", true).FindChild("Amount", true).GetComponent<Text>().color = Color.green;
-        //    employees.FindChild("Manager", true).FindChild("Amount", true).GetComponent<Text>().text = "1/1";
-        //}
 
         title.GetComponent<Text>().text = activeShip.shipName;
 
@@ -218,12 +202,6 @@ public class ShipInterfaceController : MonoBehaviour
         SetLoad();
     }
 
-    private void ManagerAdded()
-    {
-        ActivateMenu("Employees");
-        UpdateInfo();
-    }
-
     public void ListPeople()
     {
         GameObject listGameObject;
@@ -251,22 +229,6 @@ public class ShipInterfaceController : MonoBehaviour
         }
         else if (currentMenu.Equals("Employees"))
         {
-            //if(activeShip.manager != null)
-            //{
-            //    gameObject.FindChild("Employees", true).FindChild("Manager", true).FindChild("Scroll View", true).SetActive(true);
-            //    gameObject.FindChild("Employees", true).FindChild("Manager", true).FindChild("AddManager", true).SetActive(false);
-
-            //    var manager = gameObject.FindChild("Employees", true).FindChild("Manager", true).FindChild("Slots", true);
-            //    var listItem = Instantiate(personListItem);
-            //    listItem.transform.SetParent(manager.transform);
-            //    listItem.GetComponent<PersonListItemShip>().SetData(activeShip.manager, activeShip, currentIsland, currentMenu);
-            //}
-            //else
-            //{
-            //    gameObject.FindChild("Employees", true).FindChild("Manager", true).FindChild("Scroll View", true).SetActive(false);
-            //    gameObject.FindChild("Employees", true).FindChild("Manager", true).FindChild("AddManager", true).SetActive(true);
-            //}
-
             listGameObject = gameObject.FindChild("Employees", true).FindChild("EmployeesList", true).FindChild("Slots", true);
             people = activeShip.employees;
         }
@@ -302,15 +264,6 @@ public class ShipInterfaceController : MonoBehaviour
 
             Destroy(listGameObject.transform.GetChild(i).gameObject);
         }
-
-        //listGameObject = gameObject.FindChild("Employees", true).FindChild("Manager", true).FindChild("Slots", true);
-
-        //c = listGameObject.transform.childCount;
-
-        //for (int i = 0; i < c; i++)
-        //{
-        //    Destroy(listGameObject.transform.GetChild(i).gameObject);
-        //}
 
         listGameObject = gameObject.FindChild("Employees", true).FindChild("EmployeesList", true).FindChild("Slots", true);
 

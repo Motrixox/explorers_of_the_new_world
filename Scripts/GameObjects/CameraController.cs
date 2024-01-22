@@ -7,6 +7,8 @@ public class CameraController : MonoBehaviour
 {
     private float panSpeed = 40f;
 
+    public float speedMultiplier = 1f;
+
     private new GameObject camera;
     private  GameObject map;
 
@@ -14,7 +16,22 @@ public class CameraController : MonoBehaviour
 
     private GameState gameState;
 
-    void Start()
+	private void OnEnable()
+	{
+        GameOptions.OnOptionsApplied += UpdateSpeed;
+	}
+
+	private void OnDisable()
+	{
+        GameOptions.OnOptionsApplied -= UpdateSpeed;
+	}
+
+    void UpdateSpeed()
+    {
+        speedMultiplier = DataPersistenceManager.instance.gameOptions.cameraSensitivity;
+	}
+
+	void Start()
     {
         map = GameObject.Find("Map");
         camera = GameObject.FindWithTag("MainCamera");
@@ -134,7 +151,7 @@ public class CameraController : MonoBehaviour
         direction = PanDirection(x, y);
         
         transform.position = Vector3.Lerp(transform.position,
-                                                transform.position + (Vector3)direction * panSpeed,
+                                                transform.position + (Vector3)direction * panSpeed * speedMultiplier,
                                                 Time.unscaledDeltaTime);
     }
 }

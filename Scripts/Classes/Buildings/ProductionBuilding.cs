@@ -14,15 +14,13 @@ public abstract class ProductionBuilding : Building, IEmployees, IWorkingBuildin
     protected int upgradeLevel = 1;
 
     protected int productionFieldId = 0;
-    protected int fieldsInRange = 0;
+    public int fieldsInRange { get; protected set; } = 0;
     public int activeFields { get; protected set; } = 0;
     protected int productionRatio = 100;
 
     protected static int radius = 5;
     protected static int numOfFieldsPerEmployee = 3;
     protected static int profitPerField = 50;
-
-    //public Person manager { get; set; }
     public List<Person> employees { get; set; }
 
     protected new void Awake()
@@ -56,10 +54,6 @@ public abstract class ProductionBuilding : Building, IEmployees, IWorkingBuildin
 
         var empCount = employees.Count;
 
-        //var msg = "Manager is needed for the " + GetBuildingInfo().buildingName + " to work";
-        //ManageLog(msg, manager == null);
-
-        //if (empCount == 0 || manager == null)
         if (empCount == 0)
         {
             production = 0;
@@ -75,22 +69,17 @@ public abstract class ProductionBuilding : Building, IEmployees, IWorkingBuildin
             employee.CalculateProductivity();
             x += employee.productivity;
         }
-        //manager.CalculateProductivity();
-        //x += manager.productivity;
 
-        //var avgProd = x / 100.0 / (empCount + 1);
-        //productivity = x / (employeeCapacity + 1);
         var avgProd = x / 100.0 / empCount;
         productivity = x / employeeCapacity;
 
-        //activeFields = (int)(numOfFieldsPerEmployee * (empCount + 1) * avgProd);
         activeFields = (int)(numOfFieldsPerEmployee * empCount * avgProd);
 
         if (activeFields > fieldsInRange)
             activeFields = fieldsInRange;
 
         production = (int)(activeFields * profitPerField * (productionRatio / 100.0));
-        //maxProduction = (int)(numOfFieldsPerEmployee * (empCount + 1) * profitPerField * (productionRatio / 100.0));
+
         maxProduction = (int)(numOfFieldsPerEmployee * empCount * profitPerField * (productionRatio / 100.0));
     }
     public abstract void Produce();
@@ -116,28 +105,7 @@ public abstract class ProductionBuilding : Building, IEmployees, IWorkingBuildin
         employees.Remove(p);
         return true;
     }
-    //public bool AddManager(Person p)
-    //{
-    //    if (manager != null)
-    //    {
-    //        alert.Alert("Manager is already set!");
-    //        return false;
-    //    }
-
-    //    manager = p;
-    //    return true;
-    //}
-    //public bool RemoveManager()
-    //{
-    //    if (manager == null)
-    //    {
-    //        alert.Alert("There is no manager already!");
-    //        return false;
-    //    }
-
-    //    manager = null;
-    //    return true;
-    //}
+    
     protected abstract void Upgrade();
 
     public void FindFieldsInRange(int surfaceId)
@@ -180,25 +148,4 @@ public abstract class ProductionBuilding : Building, IEmployees, IWorkingBuildin
         return moraleSum / employees.Count;
     }
 
-    public void DEBUGAddEmployees()
-    {
-        //DEBUG
-        employees.Add(new Person(Guid.NewGuid().GetHashCode(), GetBuildingInfo().profession));
-        employees.Add(new Person(Guid.NewGuid().GetHashCode(), GetBuildingInfo().profession));
-        employees.Add(new Person(Guid.NewGuid().GetHashCode(), GetBuildingInfo().profession));
-        employees.Add(new Person(Guid.NewGuid().GetHashCode(), GetBuildingInfo().profession));
-        //manager = new Person(Guid.NewGuid().GetHashCode());
-
-        foreach (var e in employees)
-        {
-            e.job = gameObject;
-            e.island = island;
-            island.people.Add(e);
-        }
-        //manager.job = gameObject;
-        //manager.island = island;
-        //manager.learnedProfessions.Add(GetBuildingInfo().profession);
-        //island.people.Add(manager);
-        //DEBUG
-    }
 }

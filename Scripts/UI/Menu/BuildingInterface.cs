@@ -29,6 +29,8 @@ public class BuildingInterface : MonoBehaviour
     private GameObject shipyard;
     private GameObject school;
 
+    private bool filterByProfession = true;
+
     private string currentMenu = "Info";
 
     // Start is called before the first frame update
@@ -61,7 +63,6 @@ public class BuildingInterface : MonoBehaviour
     private void OnEnable()
     {
         PersonListItemBuilding.OnListChanged += UpdateInfo;
-        PersonListItemBuilding.OnManagerAdded += ManagerAdded;
         GameState.OnIslandChanged += UpdateInfo;
 
         Start();
@@ -73,10 +74,22 @@ public class BuildingInterface : MonoBehaviour
     private void OnDisable()
     {
         PersonListItemBuilding.OnListChanged -= UpdateInfo;
-        PersonListItemBuilding.OnManagerAdded -= ManagerAdded;
         GameState.OnIslandChanged -= UpdateInfo;
         ClearLists();
     }
+
+    public void ChangeFilter()
+    {
+		filterByProfession = !filterByProfession;
+
+		if (filterByProfession)
+            gameObject.FindChild("FilterButton", true).GetComponent<Text>().text = "By profession";
+        else
+			gameObject.FindChild("FilterButton", true).GetComponent<Text>().text = "All";
+
+        ClearLists();
+        ListPeople();
+	}
 
     private void SetInfo()
     {
@@ -298,26 +311,19 @@ public class BuildingInterface : MonoBehaviour
         else if (currentMenu.Equals("AddEmployee"))
         {
             listGameObject = gameObject.FindChild("AddPerson", true).FindChild("Slots", true);
-            people = building.island.GetUnemployed();
+
+            if(filterByProfession)
+			{
+				var profession = building.GetBuildingInfo().profession;
+                people = building.island.GetUnemployedOfProfession(profession);
+			}
+            else
+            {
+				people = building.island.GetUnemployed();
+			}
         }
         else if (currentMenu.Equals("Employees"))
         {
-            //if (employeesBuilding.manager != null)
-            //{
-            //    gameObject.FindChild("Top", true).FindChild("Employees", true).FindChild("Manager", true).FindChild("Scroll View", true).SetActive(true);
-            //    gameObject.FindChild("Top", true).FindChild("Employees", true).FindChild("Manager", true).FindChild("AddManager", true).SetActive(false);
-
-            //    var manager = gameObject.FindChild("Top", true).FindChild("Employees", true).FindChild("Manager", true).FindChild("Slots", true);
-            //    var listItem = Instantiate(personListItem);
-            //    listItem.transform.SetParent(manager.transform);
-            //    listItem.GetComponent<PersonListItemBuilding>().SetData(employeesBuilding.manager, building, building.island, currentMenu);
-            //}
-            //else
-            //{
-            //    gameObject.FindChild("Top", true).FindChild("Employees", true).FindChild("Manager", true).FindChild("Scroll View", true).SetActive(false);
-            //    gameObject.FindChild("Top", true).FindChild("Employees", true).FindChild("Manager", true).FindChild("AddManager", true).SetActive(true);
-            //}
-
             listGameObject = gameObject.FindChild("Top", true).FindChild("Employees", true).FindChild("EmployeesList", true).FindChild("Slots", true);
             people = employeesBuilding.employees;
         }
@@ -342,15 +348,6 @@ public class BuildingInterface : MonoBehaviour
         {
             Destroy(listGameObject.transform.GetChild(i).gameObject);
         }
-
-        //listGameObject = gameObject.FindChild("Top", true).FindChild("Employees", true).FindChild("Manager", true).FindChild("Slots", true);
-
-        //c = listGameObject.transform.childCount;
-
-        //for (int i = 0; i < c; i++)
-        //{
-        //    Destroy(listGameObject.transform.GetChild(i).gameObject);
-        //}
 
         listGameObject = gameObject.FindChild("Top", true).FindChild("Employees", true).FindChild("EmployeesList", true).FindChild("Slots", true);
 
@@ -384,11 +381,6 @@ public class BuildingInterface : MonoBehaviour
 
             Destroy(listGameObject.transform.GetChild(i).gameObject);
         }
-    }
-    private void ManagerAdded()
-    {
-        UpdateInfo();
-        ActivateMenu("Employees");
     }
 
     private void UpdateInfo()
@@ -477,7 +469,7 @@ public class BuildingInterface : MonoBehaviour
         ProductionBuilding productionBuilding = (ProductionBuilding)building;
 
         productionBuilding.Calculate();
-        info.FindChild("FieldsAmount", true).GetComponent<Text>().text = productionBuilding.activeFields + "/24";
+        info.FindChild("FieldsAmount", true).GetComponent<Text>().text = productionBuilding.activeFields + "/" + productionBuilding.fieldsInRange;
         info.FindChild("ProductivityAmount", true).GetComponent<Text>().text = productionBuilding.productivity + "%";
         info.FindChild("ProductionAmount", true).GetComponent<Text>().text = productionBuilding.production + "/" + productionBuilding.maxProduction;
     }

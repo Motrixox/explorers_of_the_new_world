@@ -16,7 +16,6 @@ public class BottomPanelController : MonoBehaviour
     private Text time;
 
     private UIWidget gameMenu;
-    private UIWidget controls;
     private bool IsGameMenuOpen = false;
 
     // Start is called before the first frame update
@@ -29,13 +28,11 @@ public class BottomPanelController : MonoBehaviour
         gold = gameObject.FindChild("GoldAmount", true).GetComponent<Text>();
         time = gameObject.FindChild("Time", true).GetComponent<Text>();
         gameMenu = GameObject.Find("Canvas").FindChild("Game Menu", true).GetComponent<UIWidget>();
-        controls = GameObject.Find("Canvas").FindChild("Controls Menu", true).GetComponent<UIWidget>();
     }
 
     private void Start()
     {
         gameMenu.Toggle();
-        controls.Toggle();
     }
 
     // Update is called once per frame

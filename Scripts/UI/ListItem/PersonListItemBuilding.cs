@@ -31,9 +31,6 @@ public class PersonListItemBuilding : MonoBehaviour, IPointerEnterHandler
     public delegate void ListChanged();
     public static event ListChanged OnListChanged;
 
-    public delegate void ManagerAdded();
-    public static event ManagerAdded OnManagerAdded;
-
     // Start is called before the first frame update
     void Awake()
     {
@@ -41,7 +38,6 @@ public class PersonListItemBuilding : MonoBehaviour, IPointerEnterHandler
         productivity = gameObject.FindChild("Productivity", true).GetComponent<Text>();
         sick = gameObject.FindChild("Sick", true).GetComponent<Text>();
         progress = gameObject.FindChild("Progress", true).GetComponent<Text>();
-        //details = gameObject.transform.parent.parent.parent.parent.parent.gameObject.FindChild("Details", true).GetComponent<PersonDetailsScript>();
         image = gameObject.FindChild("Button", true).GetComponent<RawImage>();
     }
 
@@ -142,57 +138,6 @@ public class PersonListItemBuilding : MonoBehaviour, IPointerEnterHandler
             sick.gameObject.SetActive(false);
     }
 
-    //private void SetDetails()
-    //{
-    //    if (details == null)
-    //        return;
-
-    //    string professions = "";
-
-    //    foreach(var prof in person.learnedProfessions)
-    //    {
-    //        professions += prof;
-    //        professions += ", ";
-    //    }
-    //    professions = professions.Remove(professions.Length - 2);
-
-    //    details.FindChild("NameAge", true).GetComponent<Text>().text = nameAge.text;
-    //    details.FindChild("Food", true).GetComponent<Text>().text = person.favFood;
-    //    details.FindChild("Good", true).GetComponent<Text>().text = person.favGood;
-    //    details.FindChild("Building", true).GetComponent<Text>().text = person.favBuilding;
-    //    details.FindChild("Professions", true).GetComponent<Text>().text = professions;
-    //    details.FindChild("Morale", true).GetComponent<Text>().text = person.morale.ToString();
-    //    details.FindChild("Productivity", true).GetComponent<Text>().text = person.productivity.ToString();
-
-    //    if (person.hasFavFood)
-    //        details.FindChild("Food", true).GetComponent<Text>().color = Color.green;
-    //    else
-    //        details.FindChild("Food", true).GetComponent<Text>().color = Color.red;
-
-    //    if (person.hasFavGood)
-    //        details.FindChild("Good", true).GetComponent<Text>().color = Color.green;
-    //    else
-    //        details.FindChild("Good", true).GetComponent<Text>().color = Color.red;
-
-    //    if (person.hasFavBuilding)
-    //        details.FindChild("Building", true).GetComponent<Text>().color = Color.green;
-    //    else
-    //        details.FindChild("Building", true).GetComponent<Text>().color = Color.red;
-    //}
-
-    //private void ResetDetails()
-    //{
-    //    details.FindChild("NameAge", true).GetComponent<Text>().text = "";
-    //    details.FindChild("Food", true).GetComponent<Text>().text = "";
-    //    details.FindChild("Good", true).GetComponent<Text>().text = "";
-    //    details.FindChild("Building", true).GetComponent<Text>().text = "";
-    //    details.FindChild("Food", true).GetComponent<Text>().color = Color.white;
-    //    details.FindChild("Good", true).GetComponent<Text>().color = Color.white;
-    //    details.FindChild("Building", true).GetComponent<Text>().color = Color.white;
-    //    details.FindChild("Professions", true).GetComponent<Text>().text = "";
-    //    details.FindChild("Morale", true).GetComponent<Text>().text = "";
-    //    details.FindChild("Productivity", true).GetComponent<Text>().text = "";
-    //}
 
     public void OnPointerEnter(PointerEventData eventData)
     {
@@ -203,21 +148,11 @@ public class PersonListItemBuilding : MonoBehaviour, IPointerEnterHandler
     {
         switch(action)
         {
-            //case "AddManager":
-            //    AddManager();
-            //    break;
             case "AddEmployee":
                 AddEmployee();
                 break;
             case "RemoveEmployee":
-                //if (person == employeesBuilding.manager)
-                //{
-                //    RemoveManager();
-                //}
-                //else
-                //{
-                    RemoveEmployee();
-                //}
+                RemoveEmployee();
                 break;
             case "AddResident":
                 AddResident();
@@ -236,20 +171,6 @@ public class PersonListItemBuilding : MonoBehaviour, IPointerEnterHandler
         if (building is IEmployees)
             ((IEmployees)building).Calculate();
     }
-
-    //private void AddManager()
-    //{
-    //    if(employeesBuilding.AddManager(person))
-    //        person.job = building.gameObject;
-    //    OnManagerAdded?.Invoke();
-    //}
-
-    //private void RemoveManager()
-    //{
-    //    if(employeesBuilding.RemoveManager())
-    //        person.job = null;
-    //    OnManagerAdded?.Invoke();
-    //}
 
     private void AddEmployee()
     {

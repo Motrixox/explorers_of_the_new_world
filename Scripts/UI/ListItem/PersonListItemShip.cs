@@ -24,9 +24,6 @@ public class PersonListItemShip : MonoBehaviour, IPointerEnterHandler
     public delegate void ListChanged();
     public static event ListChanged OnListChanged;
 
-    public delegate void ManagerAdded();
-    public static event ManagerAdded OnManagerAdded;
-
     private static AlertBoxScript alert;
 
     // Start is called before the first frame update
@@ -35,7 +32,6 @@ public class PersonListItemShip : MonoBehaviour, IPointerEnterHandler
         nameAge = gameObject.FindChild("NameAge", true).GetComponent<Text>();
         productivity = gameObject.FindChild("Productivity", true).GetComponent<Text>();
         sick = gameObject.FindChild("Sick", true).GetComponent<Text>();
-        //details = GameObject.Find("Ship Interface").FindChild("AddPerson", true).FindChild("Details", true);
         image = gameObject.FindChild("Button", true).GetComponent<RawImage>();
         if(alert == null)
             alert = GameObject.Find("Canvas").FindChild("AlertBox", true).GetComponent<AlertBoxScript>();
@@ -125,21 +121,11 @@ public class PersonListItemShip : MonoBehaviour, IPointerEnterHandler
             case "RemovePassenger":
                 RemovePassenger();
                 break;
-            //case "AddManager":
-            //    AddManager();
-            //    break;
             case "AddEmployee":
                 AddEmployee();
                 break;
             case "RemoveEmployee":
-                //if (person == ship.manager)
-                //{
-                //    RemoveManager();
-                //}
-                //else
-                //{
-                    RemoveEmployee();
-                //}
+                RemoveEmployee();
                 break;
         }
     }
@@ -166,6 +152,7 @@ public class PersonListItemShip : MonoBehaviour, IPointerEnterHandler
             ResetDetails();
         }
         OnListChanged?.Invoke();
+        Destroy(this.gameObject);
     }
 
     private void RemovePassenger()
@@ -180,34 +167,14 @@ public class PersonListItemShip : MonoBehaviour, IPointerEnterHandler
             person.job = null;
             person.island = island;
 
-            //if(person == ship.manager)
-            //    ship.RemoveManager();
-
             if(ship.employees.Contains(person))
                 ship.RemoveEmployee(person);
 
             ResetDetails();
         }
         OnListChanged?.Invoke();
-    }
-
-    //private void AddManager()
-    //{
-    //    if(ship.AddManager(person))
-    //    {
-    //        person.job = ship.shipGameObject;
-    //    }
-    //    OnManagerAdded?.Invoke();
-    //}
-
-    //private void RemoveManager()
-    //{
-    //    if(ship.RemoveManager())
-    //    {
-    //        person.job = null;
-    //    }
-    //    OnManagerAdded?.Invoke();
-    //}
+		Destroy(this.gameObject);
+	}
 
     private void AddEmployee()
     {
@@ -218,7 +185,8 @@ public class PersonListItemShip : MonoBehaviour, IPointerEnterHandler
             ship.Calculate();
         }
         OnListChanged?.Invoke();
-    }
+		Destroy(this.gameObject);
+	}
 
     private void RemoveEmployee()
     {
@@ -233,5 +201,6 @@ public class PersonListItemShip : MonoBehaviour, IPointerEnterHandler
         }
         
         OnListChanged?.Invoke();
-    }
+		Destroy(this.gameObject);
+	}
 }

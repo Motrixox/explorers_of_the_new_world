@@ -85,6 +85,19 @@ public class FileDataHandler
         }
     }
 
+    public void DeleteProfile(string profileId)
+    {
+		string fullPath = Path.Combine(dataDirPath, profileId, dataFileName);
+		try
+		{
+			Directory.Delete(Path.GetDirectoryName(fullPath),true);
+		}
+		catch (Exception e)
+		{
+			Debug.LogError("Error occured when trying to save data to file: " + fullPath + "\n" + e);
+		}
+	}
+
     public Dictionary<string, GameData> LoadAllProfiles()
     {
         Dictionary<string, GameData> profileDictionary = new Dictionary<string, GameData>();

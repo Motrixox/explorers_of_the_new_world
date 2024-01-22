@@ -55,10 +55,6 @@ public class Collector : ProductionBuilding
         Products products = new Products();
         products.AddQuantity("fruit", production);
 
-        //productionRatio = island.resourcesRatio[3];
-        //CalculateProduction();
-
-        //products.AddQuantity("herb", production);
         island.productsToBeAdded += products;
     }
 

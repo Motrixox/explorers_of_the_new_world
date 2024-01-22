@@ -471,6 +471,8 @@ public class WorldGeneratingScript : MonoBehaviour, IDataPersistence
 
     void Awake()
     {
+        Application.targetFrameRate = 0;
+
         gameState = GameObject.Find("GameState").GetComponent<GameState>();
 
         navMesh = GameObject.Find("NavMesh");
@@ -507,6 +509,7 @@ public class WorldGeneratingScript : MonoBehaviour, IDataPersistence
 
         placeWater();
 
+        gameState.random = random;
         placeShip();
 
         SetWaterSurface();

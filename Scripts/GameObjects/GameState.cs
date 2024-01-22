@@ -1,10 +1,12 @@
 using Assets.Scripts.Interfaces;
+using DevionGames;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 
 public class GameState : MonoBehaviour, IDataPersistence
@@ -31,6 +33,7 @@ public class GameState : MonoBehaviour, IDataPersistence
     private int week = 1;
     private float timeUntilNextWeek = 0f;
     private float timeUntilMapUpdate = 0f;
+    private float timeUntilAutoSave = 0f;
     public float timeSinceStart = 0f;
 
     public System.Random random;
@@ -53,13 +56,11 @@ public class GameState : MonoBehaviour, IDataPersistence
     void Start()
     {
         CheckCurrentIsland();
-    }
+	}
 
     // Update is called once per frame
     void Update()
     {
-        // this doesn't need to be checked every frame
-        // consider checking it in intervals for better performance
         CheckCurrentIsland();
 
         ManageTime();
@@ -87,6 +88,7 @@ public class GameState : MonoBehaviour, IDataPersistence
     {
         timeUntilNextWeek += Time.deltaTime;
         timeUntilMapUpdate += Time.deltaTime;
+        timeUntilAutoSave += Time.deltaTime;
 
         if (timeUntilNextWeek > 60)
         {
@@ -112,7 +114,49 @@ public class GameState : MonoBehaviour, IDataPersistence
         {
             minimapController.UpdateMap();
             timeUntilMapUpdate = 0f;
+            CheckGameLoss();
+		}
+
+        if(timeUntilAutoSave > DataPersistenceManager.instance.gameOptions.autosaveFrequencyMinutes * 60 && DataPersistenceManager.instance.gameOptions.autosaveFrequencyMinutes != 0)
+        {
+            DataPersistenceManager.instance.SaveGame();
+            GameObject.Find("Canvas").FindChild("AlertBox", true).GetComponent<AlertBoxScript>().Alert("Game has been saved!");
+            timeUntilAutoSave = 0f;
+		}
+    }
+
+    private void CheckGameLoss()
+    {
+        int peopleCount = 0;
+
+        foreach (var ship in shipList)
+        {
+            peopleCount += ship.passengers.Count;
+            peopleCount += ship.employees.Count;
         }
+
+        foreach (var island in islands)
+        {
+            var i = island.GetComponent<IslandScript>();
+			peopleCount += i.people.Count;
+        }
+
+        if(peopleCount < 5)
+        {
+            GameLost();
+        }
+    }
+
+    private void GameLost()
+    {
+        GameObject.Find("Canvas").FindChild("GameLost", true).SetActive(true);
+        SetTimeScale(-1);
+    }
+
+    public void LoadGameMenu()
+    {
+        DataPersistenceManager.instance.SaveGame();
+        SceneManager.LoadScene("MainMenu");
     }
 
     private void CalculateShipSpeed()
@@ -143,8 +187,6 @@ public class GameState : MonoBehaviour, IDataPersistence
         {
             var people = new List<Person>(ship.passengers);
             people.AddRange(ship.employees);
-            //if (ship.manager != null)
-            //    people.Add(ship.manager);
 
             foreach (var person in people)
             {
@@ -169,8 +211,6 @@ public class GameState : MonoBehaviour, IDataPersistence
         {
             var people = new List<Person>(ship.passengers);
             people.AddRange(ship.employees);
-            //if(ship.manager != null)
-            //    people.Add(ship.manager);
             ManageAge(people);
         }
     }
@@ -293,8 +333,6 @@ public class GameState : MonoBehaviour, IDataPersistence
 
         var peopleList = new List<Person>(ship.passengers);
         peopleList.AddRange(ship.employees);
-        //if(ship.manager != null)
-        //    peopleList.Add(ship.manager);
 
         if (peopleList.Count == 0)
             return;
@@ -392,8 +430,6 @@ public class GameState : MonoBehaviour, IDataPersistence
         var chances = 1000;
         var people = new List<Person>(ship.passengers);
         people.AddRange(ship.employees);
-        //if (ship.manager != null)
-        //    people.Add(ship.manager);
 
         if (people.Count == 0)
             return;

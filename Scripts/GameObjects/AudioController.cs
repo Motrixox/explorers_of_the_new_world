@@ -24,4 +24,19 @@ public class AudioController : MonoBehaviour
             audioSource.Play();
         }
     }
+
+	private void OnEnable()
+	{
+		GameOptions.OnOptionsApplied += UpdateVolume;
+	}
+
+	private void OnDisable()
+	{
+		GameOptions.OnOptionsApplied -= UpdateVolume;
+	}
+
+	void UpdateVolume()
+	{
+		audioSource.volume = DataPersistenceManager.instance.gameOptions.audioVolume;
+	}
 }

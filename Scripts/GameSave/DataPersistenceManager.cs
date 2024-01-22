@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Networking.Types;
 using UnityEngine.Playables;
 using UnityEngine.SceneManagement;
 
@@ -14,6 +15,7 @@ public class DataPersistenceManager : MonoBehaviour
     [SerializeField] private string fileName;
     [SerializeField] private bool useEncryption;
 
+    public GameOptions gameOptions;
     private GameData gameData;
     private List<IDataPersistence> dataPersistenceObjects;
     private FileDataHandler dataHandler;
@@ -26,20 +28,31 @@ public class DataPersistenceManager : MonoBehaviour
     {
         if (instance != null)
         {
+            instance.InvokeApply();
             Debug.Log("Found more than one Data Persistence Manager in the scene. Destroying the newest one.");
             Destroy(gameObject);
             return;
         }
         instance = this;
-        DontDestroyOnLoad(gameObject);
+		gameOptions = new GameOptions();
+		DontDestroyOnLoad(gameObject);
 
         dataHandler = new FileDataHandler(Application.persistentDataPath, fileName, useEncryption);
 
     }
-
-    private void OnEnable()
+	private void InvokeApply()
     {
-        SceneManager.sceneLoaded += OnSceneLoaded;
+		Invoke(nameof(Apply), 0.1f);
+	}
+
+    private void Apply()
+    {
+		gameOptions.Apply();
+	}
+
+	private void OnEnable()
+	{
+		SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
     private void OnDisable()
@@ -129,5 +142,10 @@ public class DataPersistenceManager : MonoBehaviour
     public Dictionary<string, GameData> GetAllProfilesGameData()
     {
         return dataHandler.LoadAllProfiles();
+    }
+
+    public void DeleteProfile(string profileId)
+    {
+        dataHandler.DeleteProfile(profileId);
     }
 }

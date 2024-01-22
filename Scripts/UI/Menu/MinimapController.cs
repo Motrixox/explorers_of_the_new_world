@@ -13,8 +13,10 @@ public class MinimapController : MonoBehaviour
 
     private int[,] world;
 
-    private Texture2D texture;
-    private Sprite mapBase;
+    private Texture2D baseTexture;
+    private Texture2D mapTexture;
+
+	private Sprite mapBase;
     private RectTransform cameraSquare;
 
     private float zoomScale = 1.0f;
@@ -23,8 +25,9 @@ public class MinimapController : MonoBehaviour
     {
         camera = GameObject.FindWithTag("MainCamera");
         gameState = GameObject.Find("GameState").GetComponent<GameState>();
-        texture = new Texture2D(400, 400);
-        SetMapBase();
+        baseTexture = new Texture2D(400, 400);
+		mapTexture = new Texture2D(400, 400);
+		SetMapBase();
         GetComponent<Image>().sprite = mapBase;
 
         cameraSquare = transform.parent.Find("CameraSquare").GetComponent<RectTransform>();
@@ -45,33 +48,31 @@ public class MinimapController : MonoBehaviour
             {
                 if (world[i, j] == 0)
                 { 
-                    texture.SetPixel(i, j, new UnityEngine.Color(0.4f, 0.4f, 1f));
+                    baseTexture.SetPixel(i, j, new UnityEngine.Color(0.4f, 0.4f, 1f));
                 }
                 else if (world[i, j] == 1)
                 {
-                    texture.SetPixel(i, j, new UnityEngine.Color(0.2f, 1f, 0.2f));
+                    baseTexture.SetPixel(i, j, new UnityEngine.Color(0.2f, 1f, 0.2f));
                 }
                 else if (world[i, j] == 2)
                 {
-                    texture.SetPixel(i, j, new UnityEngine.Color(1f, 0f, 0f));
+                    baseTexture.SetPixel(i, j, new UnityEngine.Color(1f, 0f, 0f));
                 }
                 else if (world[i, j] == 5)
                 {
-                    texture.SetPixel(i, j, new UnityEngine.Color(0.8f, 1f, 0.8f));
+                    baseTexture.SetPixel(i, j, new UnityEngine.Color(0.8f, 1f, 0.8f));
                 }
             }
         }
 
-        texture.Apply();
+        baseTexture.Apply();
 
-        mapBase = Sprite.Create(texture, new Rect(0.0f, 0.0f, texture.width, texture.height), new Vector2(0.5f, 0.5f));
+        mapBase = Sprite.Create(baseTexture, new Rect(0.0f, 0.0f, baseTexture.width, baseTexture.height), new Vector2(0.5f, 0.5f));
     }
 
     public void UpdateMap()
     {
-        Texture2D texture = new Texture2D(400, 400);
-
-        Graphics.CopyTexture(mapBase.texture, texture);
+        Graphics.CopyTexture(mapBase.texture, mapTexture);
 
         world = gameState.worldSurface;
 
@@ -81,7 +82,7 @@ public class MinimapController : MonoBehaviour
             {
                 if (world[i, j] >= 6)
                 {
-                    texture.SetPixel(i, j, new UnityEngine.Color(1f, 0f, 0f));
+                    mapTexture.SetPixel(i, j, new UnityEngine.Color(1f, 0f, 0f));
                 }
             }
         }
@@ -95,7 +96,7 @@ public class MinimapController : MonoBehaviour
             {
                 for (int j = -2; j < 3; j++)
                 {
-                    texture.SetPixel(x + i, z + j, new UnityEngine.Color(1f, 0f, 0f));
+                    mapTexture.SetPixel(x + i, z + j, new UnityEngine.Color(1f, 0f, 0f));
                 }
             }
         }
@@ -110,13 +111,13 @@ public class MinimapController : MonoBehaviour
                 {
                     if ((x + i) < 0 || (x + i) > 400 || (z + j) < 0 || (z + j) > 400)
                         continue;
-                    texture.SetPixel(x + i, z + j, new UnityEngine.Color(1f, 1f, 0.8f));
+                    mapTexture.SetPixel(x + i, z + j, new UnityEngine.Color(1f, 1f, 0.8f));
                 }
             }
         }
-        texture.Apply();
+        mapTexture.Apply();
 
-        var mapUpdated = Sprite.Create(texture, new Rect(0.0f, 0.0f, texture.width, texture.height), new Vector2(0.5f, 0.5f));
+        var mapUpdated = Sprite.Create(mapTexture, new Rect(0.0f, 0.0f, mapTexture.width, mapTexture.height), new Vector2(0.5f, 0.5f));
 
         GetComponent<Image>().sprite = mapUpdated;
     }

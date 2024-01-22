@@ -37,6 +37,8 @@ public class PlayerActionController : MonoBehaviour
     private GameState gameState;
     private Ship ship;
 
+    private bool buildingsNeedToBeRefreshed = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -56,7 +58,8 @@ public class PlayerActionController : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-    {        
+    {
+        RefreshBuildings();
         // this all need to be switched to events
 
         if (Input.GetKeyUp(KeyCode.Escape) || Input.GetKeyUp(KeyCode.Mouse1))
@@ -78,8 +81,6 @@ public class PlayerActionController : MonoBehaviour
                 CheckBuild(1, 1, buildingID);
             else
                 CheckBuild(2,2, buildingID);
-            //CheckBuild(2,2,12);
-            //CheckBuild(1,1,11);
         }
         else if(state == 2)
         {
@@ -138,13 +139,25 @@ public class PlayerActionController : MonoBehaviour
         }
         if (Input.GetKeyUp(KeyCode.Y))
         {
-            var p = new Person(Guid.NewGuid().GetHashCode(), string.Empty);
+            var p = PersonFactory.CreatePerson(Guid.NewGuid().GetHashCode());
             p.island = gameState.currentIsland.GetComponent<IslandScript>();
             gameState.currentIsland.GetComponent<IslandScript>().people.Add(p);
             gameState.CallOnIlsandChanged();
         }
         //DEBUG
     }
+
+    private void RefreshBuildings()
+    {
+        if (!buildingsNeedToBeRefreshed)
+            return;
+
+        if(Input.GetMouseButtonUp(0))
+        {
+			gameState.currentIsland.GetComponent<IslandScript>().RefreshBuildings();
+            buildingsNeedToBeRefreshed = false;
+		}
+	}
 
     public void SetStateBuild(int buildingID)
     {
@@ -326,9 +339,9 @@ public class PlayerActionController : MonoBehaviour
 
 
                 gameState.currentIsland.GetComponent<IslandScript>().AddBuilding(buildingGameObject.GetComponent<Building>());
-                gameState.currentIsland.GetComponent<IslandScript>().RefreshBuildings();
+				buildingsNeedToBeRefreshed = true;
 
-                ResetBuildingHelpers();
+				ResetBuildingHelpers();
             }
         }
     }
@@ -445,9 +458,9 @@ public class PlayerActionController : MonoBehaviour
                 buildingGameObject.transform.position = new Vector3(x - 0.5f + 0.5f * xLength, -0.5f, z - 0.5f + 0.5f * zLength);
 
                 gameState.currentIsland.GetComponent<IslandScript>().AddBuilding(buildingGameObject.GetComponent<Harbor>());
-                gameState.currentIsland.GetComponent<IslandScript>().RefreshBuildings();
+				buildingsNeedToBeRefreshed = true;
 
-                ResetBuildingHelpers();
+				ResetBuildingHelpers();
             }
         }
     }
@@ -511,7 +524,7 @@ public class PlayerActionController : MonoBehaviour
                 ResetBuildingHelpers();
 
                 gameState.currentIsland.GetComponent<IslandScript>().RemoveBuilding(hit.transform.gameObject);
-                gameState.currentIsland.GetComponent<IslandScript>().RefreshBuildings();
+                buildingsNeedToBeRefreshed = true;
 
                 Destroy(hit.transform.gameObject);
             }

@@ -25,17 +25,6 @@ public class IslandScript : MonoBehaviour
         "Bakunawa Retreat", "Luana Land", "Yam-Yam Retreat", "Mizuka Rock"
     };
 
-    // Ryby - 0
-    // Zwierzyna - 1
-    // Owoce - 2
-    // Zio³a - 3
-    // Pszenica - 4
-    // Winogrona - 5
-    // Przyprawy - 6
-    // Z³oto - 7
-    // Cotton - 8
-    // ¯elazo - 9
-
     public delegate void IslandUpdate();
     public static event IslandUpdate OnIslandUpdate;
 
@@ -166,24 +155,6 @@ public class IslandScript : MonoBehaviour
     {
         buildings.Add(building);
         building.island = this;
-        
-        //DEBUG
-        //if (building.GetType().IsSubclassOf(typeof(ProductionBuilding)))
-        //{
-        //    ((ProductionBuilding)building).DEBUGAddEmployees();
-        //    ((ProductionBuilding)building).Calculate();
-        //}
-        //if (building.GetType().IsSubclassOf(typeof(ProcessingBuilding)))
-        //{
-        //    ((ProcessingBuilding)building).DEBUGAddEmployees();
-        //    ((ProcessingBuilding)building).Calculate();
-        //}
-        //if (building.GetType().IsSubclassOf(typeof(ServiceBuilding)))
-        //{
-        //    ((ServiceBuilding)building).DEBUGAddEmployees();
-        //    ((ServiceBuilding)building).Calculate();
-        //}
-        //DEBUG
     }
 
     public void RemoveBuilding(GameObject buildingGameObject)
@@ -191,15 +162,6 @@ public class IslandScript : MonoBehaviour
         var b = buildingGameObject.GetComponent<Building>();
 
         buildings.Remove(b);
-
-        //foreach (var item in buildings)
-        //{
-        //    if(buildingGameObject == item.gameObject)
-        //    {
-        //        buildings.Remove(item);
-        //        break;
-        //    }
-        //}
     }
 
     public void StartRevolt(Building b)
@@ -303,12 +265,6 @@ public class IslandScript : MonoBehaviour
                     e.KillPerson();
                 }
             }
-
-            //if (gameState.random.Next(0, 2) == 0 && employees.manager != null)
-            //{
-            //    gameState.gameLog.Log(employees.manager.name + " died in a " + reason, b.transform.position, "People");
-            //    employees.manager.KillPerson();
-            //}
         }
         else if (b.GetType().Equals(typeof(House)))
         {
@@ -406,6 +362,19 @@ public class IslandScript : MonoBehaviour
         return list;
     }
 
+    public List<Person> GetUnemployedOfProfession(string profession)
+    {
+        List<Person> list = new List<Person>();
+
+        foreach (var p in people)
+        {
+            if (p.job == null && p.learnedProfessions.Contains(profession))
+                list.Add(p);
+        }
+
+        return list;
+    }
+
     public List<Person> GetPotentialStudents()
     {
         List<Person> list = new List<Person>();
@@ -458,53 +427,13 @@ public class IslandScript : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
-        //islandName = names.PickRandom();
-        //names.Remove(islandName);
-
         buildingInterface = GameObject.Find("Canvas").FindChild("Building Interface", true).GetComponent<BuildingInterface>();
         gameState = GameObject.Find("GameState").GetComponent<GameState>();
         products = new Products();
-        //products.AddQuantity("wood", 2000);
-        //products.AddQuantity("stone", 2000);
-        //products.AddQuantity("iron", 2000);
-        //products.AddQuantity("meat", 200);
-        //products.AddQuantity("vegetable", 200);
-        //products.AddQuantity("bread", 200);
-        //products.AddQuantity("fruit", 200);
-        //products.AddQuantity("fish", 200);
-        //products.AddQuantity("spice", 200);
-        //products.AddQuantity("cotton", 200);
-        //products.AddQuantity("jewelry", 200);
-
-        //foreach (var key in Products.keys)
-        //{
-        //    products.AddQuantity(key, 10000);
-        //}
-
-        //foreach (var key in Products.food)
-        //{
-        //    products.RemoveQuantity(key, 10000);
-        //}
-        //products.AddQuantity("fish", 20000);
-
-        //foreach (var key in Products.good)
-        //{
-        //    products.RemoveQuantity(key, 10000);
-        //}
 
         buildings = new List<Building>();
         people = new List<Person>();
-        //{
-        //    new Person(Guid.NewGuid().GetHashCode()),
-        //    new Person(Guid.NewGuid().GetHashCode()),
-        //    new Person(Guid.NewGuid().GetHashCode())
-        //};
         productsToBeAdded = new Products();
-
-        //foreach (var p in people)
-        //{
-        //    p.island = this;
-        //}
     }
 
     // Update is called once per frame

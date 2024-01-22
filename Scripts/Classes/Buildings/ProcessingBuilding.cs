@@ -21,7 +21,6 @@ public abstract class ProcessingBuilding : Building, IEmployees, IWorkingBuildin
     protected string productOut = "";
     protected int amountIn = 0;
 
-    //public Person manager { get; set; }
     public List<Person> employees { get; set; }
 
     protected new void Awake()
@@ -52,10 +51,6 @@ public abstract class ProcessingBuilding : Building, IEmployees, IWorkingBuildin
     {
         var empCount = employees.Count;
 
-        //var msg = "Manager is needed for the " + GetBuildingInfo().buildingName + " to work";
-        //ManageLog(msg, manager == null);
-
-        //if (empCount == 0 || manager == null)
         if (empCount == 0)
         {
             production = 0;
@@ -70,15 +65,10 @@ public abstract class ProcessingBuilding : Building, IEmployees, IWorkingBuildin
             employee.CalculateProductivity();
             x += employee.productivity;
         }
-        //manager.CalculateProductivity();
-        //x += manager.productivity;
 
-        //var avgProd = x / 100.0 / (empCount + 1);
-        //productivity = x / (employeeCapacity + 1);
         var avgProd = x / 100.0 / empCount;
         productivity = x / employeeCapacity;
 
-        //amountIn = (int)(processedAmountPerEmployee * (empCount + 1) * avgProd);
         amountIn = (int)(processedAmountPerEmployee * empCount * avgProd);
 
         int amountInStorage = island.products.GetQuantity(productIn);
@@ -90,7 +80,7 @@ public abstract class ProcessingBuilding : Building, IEmployees, IWorkingBuildin
             amountIn = amountInStorage;
 
         production = (int)(amountIn * (processingRate / 100.0));
-        //maxProduction = (int)(processedAmountPerEmployee * (empCount + 1) * (processingRate / 100.0));
+
         maxProduction = (int)(processedAmountPerEmployee * empCount * (processingRate / 100.0));
     }
     public abstract void Produce();
@@ -116,28 +106,7 @@ public abstract class ProcessingBuilding : Building, IEmployees, IWorkingBuildin
         employees.Remove(p);
         return true;
     }
-    //public bool AddManager(Person p)
-    //{
-    //    if (manager != null)
-    //    {
-    //        alert.Alert("Manager is already set!");
-    //        return false;
-    //    }
 
-    //    manager = p;
-    //    return true;
-    //}
-    //public bool RemoveManager()
-    //{
-    //    if (manager == null)
-    //    {
-    //        alert.Alert("There is no manager already!");
-    //        return false;
-    //    }
-
-    //    manager = null;
-    //    return true;
-    //}
     protected abstract void Upgrade();
     public int GetAvgMorale()
     {
@@ -151,26 +120,5 @@ public abstract class ProcessingBuilding : Building, IEmployees, IWorkingBuildin
         }
 
         return moraleSum / employees.Count;
-    }
-    public void DEBUGAddEmployees()
-    {
-        //DEBUG
-        employees.Add(new Person(Guid.NewGuid().GetHashCode(), GetBuildingInfo().profession));
-        employees.Add(new Person(Guid.NewGuid().GetHashCode(), GetBuildingInfo().profession));
-        employees.Add(new Person(Guid.NewGuid().GetHashCode(), GetBuildingInfo().profession));
-        employees.Add(new Person(Guid.NewGuid().GetHashCode(), GetBuildingInfo().profession));
-        //manager = new Person(Guid.NewGuid().GetHashCode());
-
-        foreach (var e in employees)
-        {
-            e.job = gameObject;
-            e.island = island;
-            island.people.Add(e);
-        }
-        //manager.job = gameObject;
-        //manager.island = island;
-        //manager.learnedProfessions.Add(GetBuildingInfo().profession);
-        //island.people.Add(manager);
-        //DEBUG
     }
 }
